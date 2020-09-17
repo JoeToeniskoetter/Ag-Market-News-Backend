@@ -1,5 +1,6 @@
 const app = require('express')();
 const fetch = require('node-fetch');
+require('dotenv').config()
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
@@ -71,6 +72,25 @@ app.get('/market-types/:id', async (req, res, next) => {
   const json = await resp.json()
   res.json(json);
 });
+
+app.get('/reports', async (req, res) => {
+
+  try {
+    const resp = await fetch('https://marsapi.ams.usda.gov/services/v1.1/reports', {
+      headers: {
+        Authorization: `Basic ${process.env.API_KEY}`
+      }
+    })
+    const json = await resp.json();
+    const reduced = json.map(x => ({
+      slug_name: x.slug_name,
+      report_title: x.report_title
+    }));
+    res.json(reduced);
+  } catch (e) {
+    res.send(e.message)
+  }
+})
 
 app.listen(process.env.PORT || '3000', (err) => {
   if (err) console.log(err)

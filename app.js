@@ -1,9 +1,20 @@
 const app = require('express')();
 const fetch = require('node-fetch');
 const request = require('request')
+const rateLimit = require("express-rate-limit");
 require('dotenv').config()
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+  windowMs: 10 * 1000, // 10 seconds
+  max: 100 // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use(limiter);
 
 app.get('/report/:id', async (req, res) => {
   const repId = req.params.id;

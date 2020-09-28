@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "start": "node index.js",
+    "dev": "nodemon app.js",
+    "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest --detectOpenHandles"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +19,14 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "jest": "^26.4.2",
+    "nodemon": "^2.0.4",
+    "supertest": "^5.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
   }
 }

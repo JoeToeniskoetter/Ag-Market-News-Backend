@@ -15,6 +15,7 @@ const limiter = rateLimit({
 
 //  apply to all requests
 app.use(limiter);
+app.use(errorHandler);
 
 app.get('/report/:id', async (req, res) => {
   const repId = req.params.id;
@@ -35,36 +36,72 @@ app.get('/report/:id', async (req, res) => {
 });
 
 app.get('/commodities', async (req, res, next) => {
-  const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/';
-  req.pipe(request(url)).pipe(res);
+  try {
+    const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/';
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    return next(e)
+  }
 });
 
 app.get('/commodities/:id', async (req, res, next) => {
-  const comId = req.params.id;
-  const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/${comId}`;
-  req.pipe(request(url)).pipe(res);
+  try {
+    const comId = req.params.id;
+    const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/${comId}`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    return next(e)
+  }
 });
 
 app.get('/offices', async (req, res, next) => {
-  const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/';
-  req.pipe(request(url)).pipe(res);
+  try {
+    const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/';
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    next(e)
+  }
 });
 
 app.get('/offices/:id', async (req, res, next) => {
-  const comId = req.params.id;
-  const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/${comId}`;
-  req.pipe(request(url)).pipe(res);
+  try {
+    const comId = req.params.id;
+    const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/${comId}`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    next(e)
+  }
 });
 
 app.get('/market-types', async (req, res, next) => {
-  const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-market-types/';
-  req.pipe(request(url)).pipe(res);
+  try {
+    const url = 'https://mymarketnews.ams.usda.gov/public_data/ajax-get-market-types/';
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    return next(e)
+  }
 });
 
 app.get('/market-types/:id', async (req, res, next) => {
-  const comId = req.params.id;
-  const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-market-types/${comId}`;
-  req.pipe(request(url)).pipe(res);
+  try {
+    const comId = req.params.id;
+    const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-market-types/${comId}`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+    res.json(json);
+  } catch (e) {
+    return next(e)
+  }
 });
 
 app.get('/reports', async (req, res) => {
@@ -74,7 +111,7 @@ app.get('/reports', async (req, res) => {
       headers: {
         Authorization: `Basic ${process.env.API_KEY}`
       }
-    })
+    });
     const json = await resp.json();
     const reduced = json.map(x => ({
       slug_name: x.slug_name,
@@ -84,9 +121,21 @@ app.get('/reports', async (req, res) => {
   } catch (e) {
     res.send(e.message)
   }
+});
+
+app.get('*', (req, res, next) => {
+  res.status(404).json({
+    message: 'Not Found'
+  })
 })
 
-app.listen(process.env.PORT || '3000', (err) => {
-  if (err) console.log(err)
-  console.log("running!")
-});
+function errorHandler(err, req, res, next) {
+  if (res.headersSent) {
+    return next(err)
+  }
+  res.status(500)
+  res.render('error', { error: err.message })
+}
+
+
+module.exports = app;

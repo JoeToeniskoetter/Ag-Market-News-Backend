@@ -25,7 +25,7 @@ app.get("/report/:id", async (req, res, next) => {
   if (resp.status === 200) {
     request(pdfuri).pipe(res);
   } else {
-    return next();
+    return next(resp.status);
   }
 });
 

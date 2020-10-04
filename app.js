@@ -20,7 +20,7 @@ app.use(errorHandler);
 
 app.get("/report/:id", async (req, res, next) => {
   const repId = req.params.id;
-  const pdfuri = `https://www.ams.usda.gov/mnreports/${repId}.pdf`;
+  const pdfuri = `https://www.ams.usda.gov/mnreports/${repId}`;
   const resp = await fetch(pdfuri);
   if (resp.status === 200) {
     request(pdfuri, {

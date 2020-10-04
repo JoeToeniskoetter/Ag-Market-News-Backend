@@ -23,7 +23,9 @@ app.get("/report/:id", async (req, res, next) => {
   const pdfuri = `https://www.ams.usda.gov/mnreports/${repId}.pdf`;
   const resp = await fetch(pdfuri);
   if (resp.status === 200) {
-    request(pdfuri).pipe(res);
+    request(pdfuri, {
+      rejectUnauthorized: false,
+    }).pipe(res);
   } else {
     return next(resp.status);
   }

@@ -2,7 +2,6 @@ const app = require("express")();
 const fetch = require("node-fetch");
 const request = require("request");
 const rateLimit = require("express-rate-limit");
-const e = require("express");
 require("dotenv").config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";

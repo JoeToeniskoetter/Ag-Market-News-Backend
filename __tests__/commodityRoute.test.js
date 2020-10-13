@@ -1,5 +1,5 @@
 const request = require("supertest");
-const app = require("../app");
+const app = require("../node_dist/app");
 process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 
 let allResponse;

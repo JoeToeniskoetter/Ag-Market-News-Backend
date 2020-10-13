@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./node_dist/src/index.js",
-    "dev": "nodemon ./node_dist/src/index.js",
+    "build": "rm -rf ./node_dist && npx tsc",
+    "start": "npm run build && node ./node_dist/src/index.js",
+    "dev": "npm run build && nodemon ./node_dist/index.js",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest --detectOpenHandles"
   },
   "keywords": [],

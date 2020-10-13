@@ -19,14 +19,17 @@ app.use(limiter);
 app.use(errorHandler);
 app.use(router);
 
+//main routes
 app.use("/api/ag-market-news", agMarketNewRoutes);
 
+//404 handler
 app.get("*", (req: Request, res: Response) => {
   res.status(404).json({
     message: "Not Found",
   });
 });
 
+//default error handler
 function errorHandler(
   err: any,
   req: Request,

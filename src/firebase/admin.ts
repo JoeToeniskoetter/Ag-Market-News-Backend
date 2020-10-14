@@ -1,10 +1,11 @@
 import * as admin from "firebase-admin";
 
-var serviceAccount = require("/Users/JoeToeniskotter/Documents/projects/USDA-BACKEND/ag-market-news-74525-firebase-adminsdk-cxg6q-ab66c0b514.json");
-///Users/JoeToeniskotter/Documents/projects/USDA-BACKEND/ag-market-news-74525-firebase-adminsdk-cxg6q-ab66c0b514.json
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert({
+    clientEmail: process.env.CLIENT_EMAIL,
+    privateKey: process.env.PRIVATE_KEY,
+    projectId: process.env.PROJECT_ID,
+  }),
   databaseURL: "https://ag-market-news-74525.firebaseio.com",
 });
 
@@ -19,7 +20,14 @@ export async function notifySubscribers(
         body: reportTitle,
         title: "New Report Available",
       },
-      android: { notification: { sound: "default" } },
+      data: {},
+      android: {
+        notification: {
+          sound: "default",
+          priority: "high",
+        },
+        priority: "high",
+      },
     });
   } catch (e) {
     console.log(e);

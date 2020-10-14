@@ -17,25 +17,36 @@ const updateReportsAndNotifySubscribers = async () => {
   );
   const reports = await resp.json();
   reports.forEach(async (report: ReportType) => {
-    let foundReport = await Report.findOne({ slug_name: report.slug_name });
+    let reportFromDatabase = await Report.findOne({
+      slug_name: report.slug_name,
+    });
 
-    if (!foundReport) {
+    //if report isn't in the database, then create a new one
+    if (!reportFromDatabase) {
       let newReport = new Report(report);
       await newReport.save();
       return;
     }
 
+    //if the report from API has a more recent publish date, update that report in the database
     if (
-      Date.parse(report.published_date) > Date.parse(foundReport.published_date)
+      Date.parse(report.published_date) >
+      Date.parse(reportFromDatabase.published_date)
     ) {
       let updatedReport = await Report.findOneAndUpdate(
         { slug_name: report.slug_name },
         { published_date: report.published_date },
         { new: true }
       );
-      notifySubscribers(report.report_title, report.slug_name);
-      // await notifySubscribers(report.report_title, report.slug_name);
-      console.log("UPDATED REPORT: ", updatedReport);
+
+      //if report not updated then return from function
+      //don't want to potentially notify users multiple times due to db issues
+      if (!updatedReport) {
+        return;
+      }
+
+      //if update is successful, then notify subscribers
+      notifySubscribers(updatedReport.report_title, report.slug_name);
     }
   });
 };

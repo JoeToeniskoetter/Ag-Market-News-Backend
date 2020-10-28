@@ -2,7 +2,7 @@ import app from "./app";
 import cron from "node-cron";
 import fetch from "node-fetch";
 import Report from "./db/models/Report";
-import { Report as ReportType } from "./routes/ag-market-news";
+import { Report as ReportType } from "./common/types";
 import { notifySubscribers } from "./firebase/admin";
 
 const updateReportsAndNotifySubscribers = async () => {
@@ -46,14 +46,14 @@ const updateReportsAndNotifySubscribers = async () => {
       }
 
       //if update is successful, then notify subscribers
-      notifySubscribers(updatedReport.report_title, report.slug_name);
+      notifySubscribers(updatedReport);
     }
   });
 };
 
 app.listen(process.env.PORT || "5000", () => {
   console.log("running!");
-  cron.schedule("*/30 * * * *", () => {
-    updateReportsAndNotifySubscribers();
-  });
+  //cron.schedule("*/30 * * * *", () => {
+  //updateReportsAndNotifySubscribers();
+  //});
 });

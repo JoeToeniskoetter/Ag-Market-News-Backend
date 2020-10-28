@@ -1,22 +1,31 @@
 import express, { Router, Request, Response, NextFunction } from "express";
 import fetch from "node-fetch";
 import request from "request";
+import { Report } from "../common/types";
+import { IReport } from "../db/models/Report";
+import { notifySubscribers } from "../firebase/admin";
 
 const router = Router();
 require("dotenv").config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-export type Report = {
-  slug_id: string;
-  slug_name: string;
-  report_title: string;
-  published_date: string;
-  markets: string[];
-  market_types: string[];
-  offices: string[];
-  sectionNames: string[];
-};
+
+
+// router.get("/testMessage", (req, res, next) => {
+//   const x: Report = {
+//     slug_id: "SJ_GR110",
+//     slug_name: "AMS_2960",
+//     report_title: "Arkansas Daily Grain Bids",
+//     published_date: Date.now().toString(),
+//     markets: [],
+//     market_types: [],
+//     offices: [],
+//     sectionNames: [],
+//   };
+//   notifySubscribers(x);
+//   res.json({msg:'sent'})
+// });
 
 router.get(
   "/report/:id",

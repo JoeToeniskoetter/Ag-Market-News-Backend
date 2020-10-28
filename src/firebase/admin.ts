@@ -1,26 +1,26 @@
 import * as admin from "firebase-admin";
+import { Report } from "../common/types";
+require("dotenv").config();
+
+
+const creds: string = process.env.JSON_FILE || "{}";
 
 admin.initializeApp({
-  credential: admin.credential.cert({
-    clientEmail: process.env.CLIENT_EMAIL,
-    privateKey: process.env.PRIVATE_KEY,
-    projectId: process.env.PROJECT_ID,
-  }),
+  credential: admin.credential.cert(JSON.parse(creds)),
   databaseURL: "https://ag-market-news-74525.firebaseio.com",
 });
 
-export async function notifySubscribers(
-  reportTitle: string,
-  slug_name: string
-) {
+export async function notifySubscribers(report: Report) {
   try {
     await admin.messaging().send({
-      topic: slug_name,
+      topic: report.slug_name,
       notification: {
-        body: reportTitle,
+        body: report.report_title,
         title: "New Report Available",
       },
-      data: {},
+      data: {
+        report: JSON.stringify(report),
+      },
       android: {
         notification: {
           sound: "default",

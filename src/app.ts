@@ -36,6 +36,7 @@ function errorHandler(
   res: Response,
   next: NextFunction
 ) {
+  console.log(err);
   if (res.headersSent) {
     return next(err);
   }

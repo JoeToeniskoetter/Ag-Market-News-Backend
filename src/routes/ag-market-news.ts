@@ -10,8 +10,6 @@ require("dotenv").config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-
-
 // router.get("/testMessage", (req, res, next) => {
 //   const x: Report = {
 //     slug_id: "SJ_GR110",

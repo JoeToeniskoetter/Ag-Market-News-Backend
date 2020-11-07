@@ -3,7 +3,6 @@ import cron from "node-cron";
 import fetch from "node-fetch";
 import Report from "./db/models/Report";
 import { Report as ReportType } from "./common/types";
-import { notifySubscribers } from "./firebase/admin";
 
 const updateReportsAndNotifySubscribers = async () => {
   console.log("UPDATING REPORTS");
@@ -46,7 +45,7 @@ const updateReportsAndNotifySubscribers = async () => {
       }
 
       //if update is successful, then notify subscribers
-      notifySubscribers(updatedReport);
+      //notifySubscribers(updatedReport);
     }
   });
 };

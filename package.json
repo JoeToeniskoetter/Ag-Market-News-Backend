@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js --ignore '*.json'",
+    "build": "rm -rf ./node_dist && npx tsc",
+    "start": "npm run build && node ./node_dist/src/index.js",
+    "dev": "npm run build && nodemon ./node_dist/index.js",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest --detectOpenHandles"
   },
   "keywords": [],
@@ -15,14 +16,24 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-rate-limit": "^5.1.3",
+    "firebase-admin": "^9.2.0",
+    "mongoose": "^5.10.8",
+    "node-cron": "^2.0.3",
     "node-fetch": "^2.6.1",
-    "node-schedule": "^1.3.2",
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "@types/express": "^4.17.8",
+    "@types/mongoose": "^5.7.36",
+    "@types/node": "^14.11.5",
+    "@types/node-cron": "^2.0.3",
+    "@types/node-fetch": "^2.5.7",
+    "@types/node-schedule": "^1.3.0",
+    "@types/request": "^2.48.5",
     "jest": "^26.4.2",
     "nodemon": "^2.0.4",
-    "supertest": "^5.0.0"
+    "supertest": "^5.0.0",
+    "typescript": "^4.0.3"
   },
   "jest": {
     "testEnvironment": "node",

@@ -1,5 +1,6 @@
-const app = require("express")();
-const router = require("express").Router();
+import express, { NextFunction, Request, Response, Router } from "express";
+const app = express();
+const router = Router();
 const rateLimit = require("express-rate-limit");
 const agMarketNewRoutes = require("./routes/ag-market-news");
 require("dotenv").config();
@@ -18,15 +19,25 @@ app.use(limiter);
 app.use(errorHandler);
 app.use(router);
 
+//main routes
 app.use("/api/ag-market-news", agMarketNewRoutes);
 
-app.get("*", (req, res, next) => {
+//404 handler
+app.get("*", (req: Request, res: Response) => {
   res.status(404).json({
     message: "Not Found",
   });
 });
 
-function errorHandler(err, req, res, next) {
+//default error handler
+function errorHandler(
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  console.log(err);
+  console.log(err.message);
   if (res.headersSent) {
     return next(err);
   }
@@ -34,4 +45,4 @@ function errorHandler(err, req, res, next) {
   res.render("error", { error: err.message });
 }
 
-module.exports = app;
+export default app;

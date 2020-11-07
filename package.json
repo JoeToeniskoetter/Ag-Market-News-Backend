@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "rm -rf ./node_dist && npx tsc",
+    "build": "rm -rf ./node_dist && ./node_modules/typescript/bin/tsc",
     "start": "npm run build && node ./node_dist/index.js",
     "dev": "npm run build && nodemon ./node_dist/index.js",
     "test": "NODE_TLS_REJECT_UNAUTHORIZED=0 jest --detectOpenHandles"

@@ -142,6 +142,7 @@ router.get("/reports", async (req: Request, res: Response) => {
     const reduced = json.map((x: Report) => ({
       slug_name: x.slug_name,
       report_title: x.report_title,
+      published_date: x.published_date,
     }));
     res.json(reduced);
   } catch (e) {

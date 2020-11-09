@@ -1,8 +1,10 @@
 import express, { NextFunction, Request, Response, Router } from "express";
+import path from "path";
 const app = express();
 const router = Router();
 const rateLimit = require("express-rate-limit");
 const agMarketNewRoutes = require("./routes/ag-market-news");
+import { PRIVACY } from "./static/privacy";
 require("dotenv").config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -18,9 +20,13 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(errorHandler);
 app.use(router);
-
 //main routes
+
 app.use("/api/ag-market-news", agMarketNewRoutes);
+
+app.get("/ag-market-news/privacy", function (req, res) {
+  res.send(PRIVACY);
+});
 
 //404 handler
 app.get("*", (req: Request, res: Response) => {

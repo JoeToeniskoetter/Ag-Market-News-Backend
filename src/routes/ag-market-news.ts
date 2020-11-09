@@ -22,7 +22,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 //     sectionNames: [],
 //   };
 //   notifySubscribers(x);
-//   res.json({msg:'sent'})
+//   res.json({ msg: 'sent' });
 // });
 
 router.get(

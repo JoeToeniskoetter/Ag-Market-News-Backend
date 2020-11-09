@@ -28,6 +28,12 @@ app.get("/ag-market-news/privacy", function (req, res) {
   res.send(PRIVACY);
 });
 
+app.get("/ag-market-news/support", function (req, res) {
+  res.send(`<h1>Support</h1><br/>
+  <p>Please email me with any feedback or questions:</p>
+  <a href="mailto:josephtoeniskoetter@gmail.com?subject=Ag Market News Feedback">Send me an Email!</a>`);
+});
+
 //404 handler
 app.get("*", (req: Request, res: Response) => {
   res.status(404).json({

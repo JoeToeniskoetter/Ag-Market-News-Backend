@@ -2,7 +2,6 @@ import * as admin from "firebase-admin";
 import { Report } from "../common/types";
 require("dotenv").config();
 
-
 const creds: string = process.env.JSON_FILE || "{}";
 
 admin.initializeApp({
@@ -12,7 +11,7 @@ admin.initializeApp({
 
 export async function notifySubscribers(report: Report) {
   try {
-    await admin.messaging().send({
+    const res = await admin.messaging().send({
       topic: report.slug_name,
       notification: {
         body: report.report_title,
@@ -20,6 +19,14 @@ export async function notifySubscribers(report: Report) {
       },
       data: {
         report: JSON.stringify(report),
+      },
+      apns: {
+        payload: {
+          aps: {
+            sound: "default",
+            contentAvailable: true,
+          },
+        },
       },
       android: {
         notification: {
@@ -29,6 +36,16 @@ export async function notifySubscribers(report: Report) {
         priority: "high",
       },
     });
+    // await admin.messaging().sendToTopic(report.slug_name, {
+    //   data: {
+    //     report: JSON.stringify(report),
+    //   },
+    //   notification: {
+    //     sound: "default",
+    //     body: report.report_title,
+    //     title: "New Report Available",
+    //   },
+    // });
   } catch (e) {
     console.log(e);
   }

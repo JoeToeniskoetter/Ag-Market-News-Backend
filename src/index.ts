@@ -3,9 +3,10 @@ import cron from "node-cron";
 import fetch from "node-fetch";
 import Report from "./db/models/Report";
 import { Report as ReportType } from "./common/types";
+import { notifySubscribers } from "./firebase/admin";
 
 const updateReportsAndNotifySubscribers = async () => {
-  console.log("UPDATING REPORTS");
+  console.log("UPDATING REPORTS", Date.now().toString());
   const resp = await fetch(
     "https://marsapi.ams.usda.gov/services/v1.1/reports",
     {
@@ -24,6 +25,8 @@ const updateReportsAndNotifySubscribers = async () => {
     if (!reportFromDatabase) {
       let newReport = new Report(report);
       await newReport.save();
+      //TODO: Should be sending out notification for this
+      //could have users subscribed before backend sees it
       return;
     }
 
@@ -41,18 +44,19 @@ const updateReportsAndNotifySubscribers = async () => {
       //if report not updated then return from function
       //don't want to potentially notify users multiple times due to db issues
       if (!updatedReport) {
+        //maybe we should store error messages in a seperate collection so that we can address issues
         return;
       }
 
       //if update is successful, then notify subscribers
-      //notifySubscribers(updatedReport);
+      notifySubscribers(updatedReport);
     }
   });
 };
 
 app.listen(process.env.PORT || "5000", () => {
   console.log("running!");
-  //cron.schedule("*/30 * * * *", () => {
-  //updateReportsAndNotifySubscribers();
-  //});
+  cron.schedule("*/30 * * * *", () => {
+    updateReportsAndNotifySubscribers();
+  });
 });

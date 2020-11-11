@@ -48,13 +48,11 @@ function errorHandler(
   res: Response,
   next: NextFunction
 ) {
-  console.log(err);
-  console.log(err.message);
   if (res.headersSent) {
     return next(err);
   }
   res.status(500);
-  res.render("error", { error: err.message });
+  res.json({ error: err.message });
 }
 
 export default app;

@@ -4,6 +4,7 @@ import request from "request";
 import { Report } from "../common/types";
 import { IReport } from "../db/models/Report";
 import { notifySubscribers } from "../firebase/admin";
+import admin from "../firebase/admin";
 
 const router = Router();
 require("dotenv").config();
@@ -22,8 +23,41 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 //     sectionNames: [],
 //   };
 //   notifySubscribers(x);
-//   res.json({ msg: 'sent' });
+//   res.json({ msg: "sent" });
 // });
+
+router.get(
+  "/notifications/unsubscribe/:fcm_token",
+  async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.params.fcm_token) {
+      return next({ err: { message: "Incorrect token" } });
+    }
+    try {
+      const apiRes = await fetch(
+        `https://iid.googleapis.com/iid/info/${req.params.fcm_token}?details=true`,
+        {
+          headers: {
+            authorization: `Bearer ${process.env.SERVER_KEY}`,
+          },
+        }
+      );
+      const json = await apiRes.json();
+      if(json.error){
+        return next(json.error)
+      }
+      const subscriptions = Object.keys(json.rel.topics);
+      subscriptions.forEach(
+        async (sub) =>
+          await admin
+            .messaging()
+            .unsubscribeFromTopic(req.params.fcm_token, sub)
+      );
+      res.json({ message: "ok", removedSubscriptions: subscriptions });
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
 
 router.get(
   "/report/:id",

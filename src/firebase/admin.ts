@@ -8,7 +8,7 @@ admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(creds)),
   databaseURL: "https://ag-market-news-74525.firebaseio.com",
 });
-
+export default admin;
 export async function notifySubscribers(report: Report) {
   try {
     const res = await admin.messaging().send({

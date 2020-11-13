@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import ReportSchema, { IReport } from "./models/Report";
-import NotificationSchema, { INotification } from "./models/Notification";
+// import NotificationSchema, { INotification } from "./models/Notification";
 
 mongoose.connect(
   `mongodb+srv://${process.env.MONGODB_USERNAME}:${
@@ -12,9 +12,9 @@ mongoose.connect(
 );
 
 export const Report = mongoose.model<IReport>("Report", ReportSchema);
-export const Notification = mongoose.model<INotification>(
-  "Notification",
-  NotificationSchema
-);
+// export const Notification = mongoose.model<INotification>(
+//   "Notification",
+//   NotificationSchema
+// );
 
 export default mongoose;

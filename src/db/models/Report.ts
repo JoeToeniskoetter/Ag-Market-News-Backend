@@ -1,9 +1,4 @@
-import mongoose, { Schema, Document } from "mongoose";
-
-mongoose.connect(
-  `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.v4pu5.mongodb.net/${process.env.MONGODB_DATABASE}?retryWrites=true&w=majority`,
-  { useFindAndModify: true, useNewUrlParser: true, useUnifiedTopology: true }
-);
+import { Schema, Document } from "mongoose";
 
 export interface IReport extends Document {
   slug_id: string;
@@ -27,4 +22,4 @@ const ReportSchema = new Schema({
   sectionNames: { type: [String], required: true },
 });
 
-export default mongoose.model<IReport>("Report", ReportSchema);
+export default ReportSchema;

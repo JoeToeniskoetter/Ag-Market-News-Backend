@@ -1,7 +1,7 @@
 import app from "./app";
 import cron from "node-cron";
 import fetch from "node-fetch";
-import Report from "./db/models/Report";
+import { Report } from "./db/db";
 import { Report as ReportType } from "./common/types";
 import { notifySubscribers } from "./firebase/admin";
 
@@ -16,6 +16,7 @@ const updateReportsAndNotifySubscribers = async () => {
     }
   );
   const reports = await resp.json();
+
   reports.forEach(async (report: ReportType) => {
     let reportFromDatabase = await Report.findOne({
       slug_name: report.slug_name,

@@ -31,7 +31,7 @@ export async function notifySubscribers(report: Report) {
       android: {
         notification: {
           sound: "default",
-          priority: "high",
+          priority: "max",
         },
         priority: "high",
       },

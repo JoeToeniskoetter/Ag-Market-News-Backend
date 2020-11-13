@@ -5,6 +5,7 @@ import { Report } from "../common/types";
 import { IReport } from "../db/models/Report";
 import { notifySubscribers } from "../firebase/admin";
 import admin from "../firebase/admin";
+import { cacheResult } from "../cache/cache";
 
 const router = Router();
 require("dotenv").config();
@@ -42,9 +43,16 @@ router.get(
         }
       );
       const json = await apiRes.json();
-      if(json.error){
-        return next(json.error)
+      console.log(json);
+
+      if (json.error) {
+        return next(json.error);
       }
+
+      if (!json.rel) {
+        res.json({ message: "ok", removedSubscriptions: [] });
+      }
+
       const subscriptions = Object.keys(json.rel.topics);
       subscriptions.forEach(
         async (sub) =>
@@ -83,6 +91,7 @@ router.get(
         "https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/";
       const resp = await fetch(url);
       const json = await resp.json();
+      cacheResult(req.originalUrl, json);
       res.json(json);
     } catch (e) {
       return next(e);
@@ -98,6 +107,7 @@ router.get(
       const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-commodities/${comId}`;
       const resp = await fetch(url);
       const json = await resp.json();
+      cacheResult(req.originalUrl, json);
       res.json(json);
     } catch (e) {
       return next(e);
@@ -113,6 +123,7 @@ router.get(
         "https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/";
       const resp = await fetch(url);
       const json = await resp.json();
+      cacheResult(req.originalUrl, json);
       res.json(json);
     } catch (e) {
       next(e);
@@ -128,6 +139,7 @@ router.get(
       const url = `https://mymarketnews.ams.usda.gov/public_data/ajax-get-offices/${comId}`;
       const resp = await fetch(url);
       const json = await resp.json();
+      cacheResult(req.originalUrl, json);
       res.json(json);
     } catch (e) {
       next(e);
@@ -144,6 +156,7 @@ router.get(
       const resp = await fetch(url);
       const json = await resp.json();
       res.json(json);
+      cacheResult(req.originalUrl, json);
     } catch (e) {
       return next(e);
     }
@@ -157,6 +170,7 @@ router.get("/market-types/:id", async (req: Request, res: Response, next) => {
     const resp = await fetch(url);
     const json = await resp.json();
     res.json(json);
+    cacheResult(req.originalUrl, json);
   } catch (e) {
     return next(e);
   }
@@ -178,6 +192,7 @@ router.get("/reports", async (req: Request, res: Response) => {
       report_title: x.report_title,
       published_date: x.published_date,
     }));
+    cacheResult(req.originalUrl, json);
     res.json(reduced);
   } catch (e) {
     res.send(e.message);

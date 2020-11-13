@@ -5,6 +5,10 @@ const router = Router();
 const rateLimit = require("express-rate-limit");
 const agMarketNewRoutes = require("./routes/ag-market-news");
 import { PRIVACY } from "./static/privacy";
+import helmet from "helmet";
+import cors from "cors";
+import { Cache } from "./cache/cache";
+
 require("dotenv").config();
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -20,6 +24,9 @@ const limiter = rateLimit({
 app.use(limiter);
 app.use(errorHandler);
 app.use(router);
+app.use(helmet());
+app.use(cors());
+app.use(Cache);
 //main routes
 
 app.use("/api/ag-market-news", agMarketNewRoutes);

@@ -4,7 +4,6 @@ const app = express();
 const router = Router();
 const rateLimit = require("express-rate-limit");
 const agMarketNewRoutes = require("./routes/ag-market-news");
-import { PRIVACY } from "./static/privacy";
 import helmet from "helmet";
 import cors from "cors";
 import { Cache } from "./cache/cache";
@@ -19,7 +18,6 @@ const limiter = rateLimit({
   windowMs: 10 * 1000, // 10 seconds
   max: 100, // limit each IP to 100 requests per windowMs
 });
-
 //  apply to all requests
 app.use(limiter);
 app.use(errorHandler);
@@ -27,20 +25,14 @@ app.use(router);
 app.use(helmet());
 app.use(cors());
 app.use(Cache);
+app.use(express.static(path.join(__dirname, "/static")));
 //main routes
 
 app.use("/api/ag-market-news", agMarketNewRoutes);
 
-app.get("/ag-market-news/privacy", function (req, res) {
-  res.send(PRIVACY);
+app.get("/ag-market-news/:filename", (req, res, next) => {
+  res.redirect(`/ag-market-news/${req.params.filename}.html`);
 });
-
-app.get("/ag-market-news/support", function (req, res) {
-  res.send(`<h1>Support</h1><br/>
-  <p>Please email me with any feedback or questions:</p>
-  <a href="mailto:josephtoeniskoetter@gmail.com?subject=Ag Market News Feedback">Send me an Email!</a>`);
-});
-
 //404 handler
 app.get("*", (req: Request, res: Response) => {
   res.status(404).json({

@@ -6,7 +6,6 @@ import { Report as ReportType } from "./common/types";
 import { notifySubscribers } from "./firebase/admin";
 
 const updateReportsAndNotifySubscribers = async () => {
-  console.log("UPDATING REPORTS", Date.now().toString());
   const resp = await fetch(
     "https://marsapi.ams.usda.gov/services/v1.1/reports",
     {

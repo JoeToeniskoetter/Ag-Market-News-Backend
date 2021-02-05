@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import ReportSchema, { IReport } from "./models/Report";
+import RequestSchema, { IRequests } from "./models/Requests";
 // import NotificationSchema, { INotification } from "./models/Notification";
 
 mongoose.connect(
@@ -12,6 +13,7 @@ mongoose.connect(
 );
 
 export const Report = mongoose.model<IReport>("Report", ReportSchema);
+export const Requests = mongoose.model<IRequests>("Requests", RequestSchema);
 // export const Notification = mongoose.model<INotification>(
 //   "Notification",
 //   NotificationSchema
